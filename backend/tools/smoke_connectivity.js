@@ -13,13 +13,22 @@
 
   Optional env:
     BASE_URL=http://localhost:3000
+    API_PREFIX=/api/v1
 */
 
 const http = require('http');
 const WebSocket = require('ws');
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const API_PREFIX = process.env.API_PREFIX || '/api/v1';
 const base = new URL(BASE_URL);
+
+function apiPath(p) {
+  const prefix = String(API_PREFIX || '').trim() || '';
+  const normPrefix = prefix.startsWith('/') ? prefix : `/${prefix}`;
+  const normPath = p.startsWith('/') ? p : `/${p}`;
+  return `${normPrefix}${normPath}`;
+}
 
 async function retry(fn, { tries = 10, delayMs = 250 } = {}) {
   let lastErr;
@@ -142,6 +151,7 @@ async function recvMessage(wsConn, timeoutMs = 2500) {
 
 async function main() {
   console.log(`BASE_URL=${BASE_URL}`);
+  console.log(`API_PREFIX=${API_PREFIX}`);
 
   // 0) Health (retry to tolerate nodemon restarts)
   const health = await retry(() => requestJson('GET', '/', undefined), { tries: 20, delayMs: 200 });
@@ -152,7 +162,7 @@ async function main() {
     const password = 'Password123!';
     const deviceId = `dev-${randomHex(16)}`;
 
-    const reg = await requestJson('POST', '/api/auth/register', {
+    const reg = await requestJson('POST', apiPath('/auth/register'), {
       email,
       password,
       publicKey: 'pk',
@@ -162,13 +172,13 @@ async function main() {
       salt: 'salt',
       iv: 'iv',
     });
-    if (reg.status !== 200) {
+    if (reg.status < 200 || reg.status >= 300) {
       throw new Error(`register ${label} failed: ${reg.status} ${reg.body}`);
     }
 
     const login = await requestJson(
       'POST',
-      '/api/auth/login',
+      apiPath('/auth/login'),
       { email, password },
       { 'x-device-id': deviceId, 'user-agent': 'smoke-connectivity' }
     );
@@ -176,18 +186,19 @@ async function main() {
       throw new Error(`login ${label} failed: ${login.status} ${login.body}`);
     }
 
-    const token = login.json && login.json.token;
+    const token = login.json && login.json.data && login.json.data.token;
+    const refreshToken = login.json && login.json.data && login.json.data.refreshToken;
     if (!token) throw new Error(`login ${label} missing token`);
 
-    const me = await requestJson('GET', '/api/auth/me', undefined, { Authorization: `Bearer ${token}` });
+    const me = await requestJson('GET', apiPath('/auth/me'), undefined, { Authorization: `Bearer ${token}` });
     if (me.status !== 200) {
       throw new Error(`me ${label} failed: ${me.status} ${me.body}`);
     }
 
-    const userId = me.json && me.json.user && me.json.user.id;
+    const userId = me.json && me.json.data && me.json.data.user && me.json.data.user.id;
     if (!userId) throw new Error(`me ${label} missing user id`);
 
-    return { label, email, password, deviceId, token, userId };
+    return { label, email, password, deviceId, token, refreshToken, userId };
   }
 
   const A = await mkUser('A');

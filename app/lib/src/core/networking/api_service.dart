@@ -155,8 +155,12 @@ class ApiService {
 
   static Future<void> logout() async {
     try {
+      final deviceId = await AuthenticatedHttpClient.getOrCreateDeviceId();
       final res = await _authed.post(
         _uri('/auth/logout'),
+        headers: {
+          if (deviceId != null) 'x-device-id': deviceId,
+        },
         body: jsonEncode({
           "refreshToken": await StorageService.read("refreshToken"),
         }),

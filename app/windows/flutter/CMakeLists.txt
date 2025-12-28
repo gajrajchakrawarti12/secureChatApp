@@ -4,7 +4,60 @@ cmake_minimum_required(VERSION 3.14)
 set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
 
 # Configuration provided via flutter tool.
-include(${EPHEMERAL_DIR}/generated_config.cmake)
+set(GENERATED_CONFIG "${EPHEMERAL_DIR}/generated_config.cmake")
+
+# The Flutter tool normally generates this file. Some build flows (e.g. opening
+# the project directly in an IDE) can run CMake before Flutter has created it.
+# In that case, generate a minimal fallback so configuration can proceed.
+if (NOT EXISTS "${GENERATED_CONFIG}")
+  file(MAKE_DIRECTORY "${EPHEMERAL_DIR}")
+
+  # Determine FLUTTER_ROOT.
+  set(_flutter_root "")
+  if (DEFINED ENV{FLUTTER_ROOT} AND NOT "$ENV{FLUTTER_ROOT}" STREQUAL "")
+    set(_flutter_root "$ENV{FLUTTER_ROOT}")
+  else()
+    find_program(_flutter_cmd NAMES flutter.bat flutter)
+    if (_flutter_cmd)
+      get_filename_component(_flutter_bin_dir "${_flutter_cmd}" DIRECTORY)
+      get_filename_component(_flutter_root "${_flutter_bin_dir}" DIRECTORY)
+    endif()
+  endif()
+
+  if (_flutter_root STREQUAL "")
+    message(FATAL_ERROR
+      "Missing ${GENERATED_CONFIG}. Run `flutter pub get`/`flutter build windows`, or set the FLUTTER_ROOT environment variable.")
+  endif()
+
+  # Determine PROJECT_DIR (Flutter project root).
+  get_filename_component(_project_dir "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+
+  # Normalize paths for the generated config file.
+  file(TO_CMAKE_PATH "${_flutter_root}" _flutter_root_cmake)
+  file(TO_CMAKE_PATH "${_project_dir}" _project_dir_cmake)
+  file(TO_CMAKE_PATH "${EPHEMERAL_DIR}" _ephemeral_dir_cmake)
+
+  # Write a minimal config compatible with the rest of this file.
+  set(_generated_config_lines "")
+  list(APPEND _generated_config_lines
+    "# Auto-generated fallback created by CMake."
+    "# The Flutter tool will overwrite this file during a normal Flutter build."
+    "set(FLUTTER_ROOT \"${_flutter_root_cmake}\")"
+    "set(PROJECT_DIR \"${_project_dir_cmake}\")"
+    "set(FLUTTER_EPHEMERAL_DIR \"${_ephemeral_dir_cmake}\")"
+    "set(FLUTTER_TARGET \"lib/main.dart\")"
+    "set(FLUTTER_TOOL_ENVIRONMENT"
+    "  \"FLUTTER_ROOT=${_flutter_root_cmake}\""
+    "  \"PROJECT_DIR=${_project_dir_cmake}\""
+    "  \"FLUTTER_EPHEMERAL_DIR=${_ephemeral_dir_cmake}\""
+    "  \"FLUTTER_TARGET=lib/main.dart\""
+    ")"
+  )
+  string(JOIN "\n" _generated_config_content ${_generated_config_lines})
+  file(WRITE "${GENERATED_CONFIG}" "${_generated_config_content}\n")
+endif()
+
+include("${GENERATED_CONFIG}")
 
 # TODO: Move the rest of this into files in ephemeral. See
 # https://github.com/flutter/flutter/issues/57146.
