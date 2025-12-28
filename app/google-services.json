@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231393387344",
+    "project_id": "apna-blog-e68ef",
+    "storage_bucket": "apna-blog-e68ef.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231393387344:android:997921cb586a8ea0ee8255",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw5f3TcaYe781i5zsW-OhbYRSrvg5wQk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

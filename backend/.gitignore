@@ -1,0 +1,14 @@
+node_modules/
+logs/
+.env
+.env.*
+*.log
+
+# Secrets
+**/*adminsdk*.json
+**/*service-account*.json
+**/*serviceAccount*.json
+
+# OS
+.DS_Store
+Thumbs.db
