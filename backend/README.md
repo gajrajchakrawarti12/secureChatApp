@@ -14,9 +14,9 @@ Quick start
 npm install
 ```
 
-2. Ensure MySQL is running and accessible with the credentials in `.env`.
+1. Ensure MySQL is running and accessible with the credentials in `.env`.
 
-3. Start the server:
+1. Start the server:
 
 ```bash
 npm start

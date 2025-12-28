@@ -15,7 +15,6 @@ const { auth } = require("../../api/middleware/auth");
 const { asyncHandler } = require("../../api/middleware/asyncHandler");
 const { rateLimit } = require("../../api/middleware/rateLimit");
 const express = require("express");
-const { deleteAllUserTokens } = require("../push/pushTokens");
 
 const authRouter = express.Router();
 authRouter.use(express.json({ limit: '512kb' }));
@@ -350,10 +349,6 @@ authRouter.post("/logout", loginLimiter, asyncHandler(async (req, res) => {
         return res.status(500).json({ error: 'failed to revoke refresh token' });
       }
 
-      // Best-effort: unregister all push tokens for this user on logout.
-      try {
-        await deleteAllUserTokens(verified.userId);
-      } catch (_) {}
       return res.json({ ok: true, message: 'logged out' });
     }
 
@@ -405,11 +400,6 @@ authRouter.post("/logout", loginLimiter, asyncHandler(async (req, res) => {
 
     if (!deleted)
       return res.status(400).json({ error: "refresh token not found" });
-
-    // Best-effort: unregister all push tokens for this user on logout.
-    try {
-      await deleteAllUserTokens(userId);
-    } catch (_) {}
 
     res.json({ ok: true, message: "logged out" });
 }));

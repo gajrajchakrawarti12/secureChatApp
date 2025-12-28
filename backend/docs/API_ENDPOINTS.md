@@ -4,24 +4,20 @@ This document describes all HTTP endpoints and the WebSocket behavior implemente
 
 - Server bootstrap and route mounting: see [src/index.js](src/index.js)
 - Server implementation: see [src/app/server.js](src/app/server.js)
-- Route modules: see [src/api/routes/index.js](src/api/routes/index.js), [src/api/routes/auth.routes.js](src/api/routes/auth.routes.js), [src/api/routes/users.routes.js](src/api/routes/users.routes.js), [src/api/routes/messages.routes.js](src/api/routes/messages.routes.js), [src/api/routes/push.routes.js](src/api/routes/push.routes.js)
+- Route modules: see [src/api/routes/index.js](src/api/routes/index.js), [src/api/routes/auth.routes.js](src/api/routes/auth.routes.js), [src/api/routes/users.routes.js](src/api/routes/users.routes.js), [src/api/routes/messages.routes.js](src/api/routes/messages.routes.js)
 - Auth middleware: see [src/api/middleware/auth.js](src/api/middleware/auth.js)
 - WebSocket server: see [src/realtime/ws.js](src/realtime/ws.js)
 
 ## Overview
 
 - Base mount: `app.use('/api', apiRoutes)` in [src/app/server.js](src/app/server.js)
-- Sub-routes under `/api`: `/auth`, `/user`, `/messages`, `/push` from [src/api/routes/index.js](src/api/routes/index.js)
+- Sub-routes under `/api`: `/auth`, `/user`, `/messages` from [src/api/routes/index.js](src/api/routes/index.js)
 - Health check: `GET /` returns `{ ok: true, message: 'backend running' }`
 - Environment:
   - `PORT` (default 3000)
   - `JWT_SECRET` (default `changeme`)
   - `JWT_EXPIRES_IN` (default `1h`)
-  - `DB_DRIVER` (default `mysql`; set to `firebase` to use Firestore)
-  - Firebase Admin credentials (when `DB_DRIVER=firebase`):
-    - `GOOGLE_APPLICATION_CREDENTIALS` (recommended; absolute path to service account JSON)
-    - or `FIREBASE_SERVICE_ACCOUNT_PATH` (path to JSON)
-    - or `FIREBASE_SERVICE_ACCOUNT_BASE64` (base64-encoded JSON content)
+  - `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
 
 ## Authentication
 
@@ -188,31 +184,6 @@ curl "http://localhost:3000/api/messages/2?limit=50" \
 
 > Note: This route is protected and requires a valid JWT.
 
-## Push Notification Token Endpoints (mounted under `/api/push`)
-
-Source: [src/api/routes/push.routes.js](src/api/routes/push.routes.js)
-
-### POST `/api/push/register`
-
-- Auth: Required; include `Authorization: Bearer <token>`.
-- Body: `{ token }` — FCM device token.
-- Behavior: Saves/updates the device token for the authenticated user.
-- Success: `200` `{ ok: true }`
-- Errors: `400` (missing token), `500`.
-
-### Push message content
-
-- The backend only sends **metadata-only** push notifications.
-- No plaintext or ciphertext message content is included in push notifications.
-
-### POST `/api/push/unregister`
-
-- Auth: Required.
-- Body: `{ token }`
-- Behavior: Deletes the device token for the authenticated user.
-- Success: `200` `{ ok: true }`
-- Errors: `400` (missing token), `500`.
-
 ## WebSocket — `/ws`
 
 Source: [src/realtime/ws.js](src/realtime/ws.js)
@@ -294,12 +265,6 @@ ws.on('message', (data) => console.log('recv:', data.toString()));
   - `refresh_tokens`: `id, user_id, token`
   - `messages`: `id, sender_id, receiver_id, encrypted_message, timestamp`
 
-- Firebase (when `DB_DRIVER=firebase`):
-  - Collection `users`: same fields as above; `id` is an auto-incremented integer managed via transactions.
-  - Collection `refresh_tokens`: `{ id, user_id, token, created_at }` (token stored hashed).
-  - Collection `messages`: `{ id, sender_id, receiver_id, encrypted_message, timestamp }`.
-  - Collection `push_tokens`: `{ id, user_id, token, created_at }` for device tokens used by FCM.
-
 ## Logging & Request IDs
 
 - `morgan` with custom format logs request `id` and `user` if available: see [src/app/server.js](src/app/server.js).
@@ -318,24 +283,6 @@ ws.on('message', (data) => console.log('recv:', data.toString()));
 - Rotate `JWT_SECRET` and set via environment; avoid default `changeme`.
 - Consider rate limiting and input length constraints for message payloads.
 - Ensure TLS (HTTPS/WSS) for production deployments.
-
-## Firebase Setup (Windows PowerShell)
-
-To use Firebase Firestore as the database while preserving all request/response formats:
-
-```powershell
-$env:DB_DRIVER = "firebase"
-
-# Recommended: point to your service account file
-$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\\secure\\service-account.json"
-
-# Alternatively:
-# $env:FIREBASE_SERVICE_ACCOUNT_PATH = "C:\\secure\\service-account.json"
-# $env:FIREBASE_SERVICE_ACCOUNT_BASE64 = "<base64-encoded-json>"
-
-$env:JWT_SECRET = "your-strong-secret"
-npm start
-```
 
 ---
 

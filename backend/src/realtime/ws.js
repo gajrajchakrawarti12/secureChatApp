@@ -2,7 +2,6 @@ const WebSocket = require('ws');
 const jwt = require('jsonwebtoken');
 const { getPool } = require('../infra/db');
 const { logError, logWs } = require('../infra/logging/logger');
-const { sendMessageNotification } = require('../modules/push/notification');
 
 const { JWT_SECRET = 'changeme' } = process.env;
 
@@ -114,17 +113,6 @@ function initWebsocket(server) {
             encrypted_message,
             timestamp: new Date()
           };
-
-          // Trigger push notification (metadata only; no message content).
-          try {
-            await sendMessageNotification({
-              receiverId: receiver_id,
-              senderId: sender_id,
-              messageId: saved.id,
-            });
-          } catch (e) {
-            try { logError(e); } catch (_) {}
-          }
 
           const out = JSON.stringify({ type: 'message', payload: saved, from: ws.id, ts: Date.now() });
           // Deliver only to sender and receiver.

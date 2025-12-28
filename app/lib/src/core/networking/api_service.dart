@@ -17,41 +17,10 @@ class ApiService {
     await _ensureWebSocketConnection(onMessage: onMessage);
   }
 
-  /// Register device push token with backend for notifications.
-  static Future<void> registerPushToken(String token) async {
-    try {
-      final res = await _authed.post(
-        Uri.parse("${Config.apiBase}/push/register"),
-        body: jsonEncode({"token": token}),
-      );
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        throw ApiException('Failed to register push token: ${res.statusCode}');
-      }
-    } catch (e) {
-      if (e is ApiException) rethrow;
-      throw NetworkException(e.toString());
-    }
-  }
-
-  /// Unregister device push token (used when user disables push).
-  static Future<void> unregisterPushToken(String token) async {
-    try {
-      final res = await _authed.post(
-        Uri.parse("${Config.apiBase}/push/unregister"),
-        body: jsonEncode({"token": token}),
-      );
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        throw ApiException('Failed to unregister push token: ${res.statusCode}');
-      }
-    } catch (e) {
-      if (e is ApiException) rethrow;
-      throw NetworkException(e.toString());
-    }
-  }
-
   static Future<void> disconnectWebSocket() async {
     await _webSocket.disconnect();
   }
+
 
   static Future<void> _ensureWebSocketConnection({void Function(String message)? onMessage}) async {
     if (_webSocket.isConnected) {

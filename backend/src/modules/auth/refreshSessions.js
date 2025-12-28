@@ -1,12 +1,10 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-
-const admin = require('../../infra/firebase/admin');
 const { getPool } = require('../../infra/db');
 const { logError } = require('../../infra/logging/logger');
 
-const { DB_DRIVER = 'mysql', JWT_REFRESH_EXPIRES_IN = '7d' } = process.env;
+const { JWT_REFRESH_EXPIRES_IN = '7d' } = process.env;
 
 function base64url(buf) {
   return buf
@@ -70,41 +68,7 @@ async function revokeAllRefreshForUserMySql(conn, userId) {
   await conn.query('DELETE FROM refresh_tokens WHERE user_id = ?', [userId]);
 }
 
-async function revokeAllRefreshForUserFirebase(userId) {
-  const firestore = admin.firestore();
-  const now = new Date();
-
-  // refresh_sessions
-  try {
-    const snap = await firestore.collection('refresh_sessions').where('user_id', '==', Number(userId)).get();
-    if (!snap.empty) {
-      const batch = firestore.batch();
-      snap.docs.forEach((d) => batch.update(d.ref, { revoked_at: now }));
-      await batch.commit();
-    }
-  } catch (e) {
-    try { logError(e); } catch (_) {}
-  }
-
-  // legacy refresh_tokens
-  try {
-    const snap = await firestore.collection('refresh_tokens').where('user_id', '==', Number(userId)).get();
-    if (!snap.empty) {
-      const batch = firestore.batch();
-      snap.docs.forEach((d) => batch.delete(d.ref));
-      await batch.commit();
-    }
-  } catch (e) {
-    try { logError(e); } catch (_) {}
-  }
-}
-
 async function revokeAllRefreshForUser(userId, { conn } = {}) {
-  if (DB_DRIVER.toLowerCase() === 'firebase') {
-    await revokeAllRefreshForUserFirebase(userId);
-    return;
-  }
-
   const pool = getPool();
   if (conn) {
     await revokeAllRefreshForUserMySql(conn, userId);
@@ -139,23 +103,6 @@ async function issueRefreshSession({ userId, deviceId, userAgent, ip }) {
   const user_agent_hash = sha256Hex(userAgent);
   const ip_hash = sha256Hex(ip);
 
-  if (DB_DRIVER.toLowerCase() === 'firebase') {
-    const firestore = admin.firestore();
-    await firestore.collection('refresh_sessions').doc(tokenId).set({
-      user_id: Number(userId),
-      token_id: tokenId,
-      token_hash: tokenHash,
-      device_id,
-      user_agent_hash,
-      ip_hash,
-      created_at: admin.firestore.FieldValue.serverTimestamp(),
-      expires_at: expiresAt,
-      revoked_at: null,
-      replaced_by_token_id: null,
-    });
-    return { refreshToken, tokenId, expiresAt };
-  }
-
   const pool = getPool();
   await pool.query(
     'INSERT INTO refresh_sessions (user_id, token_id, token_hash, device_id, user_agent_hash, ip_hash, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -166,21 +113,6 @@ async function issueRefreshSession({ userId, deviceId, userAgent, ip }) {
 }
 
 async function findRefreshSessionById({ tokenId }) {
-  if (DB_DRIVER.toLowerCase() === 'firebase') {
-    const doc = await admin.firestore().collection('refresh_sessions').doc(String(tokenId)).get();
-    if (!doc.exists) return null;
-    const d = doc.data() || {};
-    return {
-      token_id: d.token_id,
-      user_id: d.user_id,
-      token_hash: d.token_hash,
-      device_id: d.device_id || null,
-      expires_at: d.expires_at instanceof Date ? d.expires_at : d.expires_at?.toDate?.() || d.expires_at,
-      revoked_at: d.revoked_at instanceof Date ? d.revoked_at : d.revoked_at?.toDate?.() || d.revoked_at,
-      replaced_by_token_id: d.replaced_by_token_id || null,
-    };
-  }
-
   const pool = getPool();
   const [rows] = await pool.query(
     'SELECT user_id, token_id, token_hash, device_id, expires_at, revoked_at, replaced_by_token_id FROM refresh_sessions WHERE token_id = ? LIMIT 1',
@@ -190,13 +122,6 @@ async function findRefreshSessionById({ tokenId }) {
 }
 
 async function revokeRefreshSession({ tokenId }) {
-  if (DB_DRIVER.toLowerCase() === 'firebase') {
-    const ref = admin.firestore().collection('refresh_sessions').doc(String(tokenId));
-    const snap = await ref.get();
-    if (!snap.exists) return { found: false };
-    await ref.update({ revoked_at: new Date() });
-    return { found: true };
-  }
   const pool = getPool();
   const [res] = await pool.query('UPDATE refresh_sessions SET revoked_at = ? WHERE token_id = ?', [new Date(), tokenId]);
   return { found: !!(res && res.affectedRows) };
@@ -302,33 +227,6 @@ async function rotateRefreshSession({ refreshToken, deviceId, userAgent, ip }) {
   const device_id = presentedDeviceId || (row.device_id ? String(row.device_id) : null);
   const user_agent_hash = sha256Hex(userAgent);
   const ip_hash = sha256Hex(ip);
-
-  if (DB_DRIVER.toLowerCase() === 'firebase') {
-    const firestore = admin.firestore();
-    const refOld = firestore.collection('refresh_sessions').doc(String(tokenId));
-    const refNew = firestore.collection('refresh_sessions').doc(String(newTokenId));
-    await firestore.runTransaction(async (t) => {
-      const snap = await t.get(refOld);
-      if (!snap.exists) throw new Error('refresh session missing');
-      const d = snap.data() || {};
-      if (d.revoked_at || d.replaced_by_token_id) throw new Error('refresh session already used');
-      t.update(refOld, { revoked_at: now, replaced_by_token_id: newTokenId });
-      t.set(refNew, {
-        user_id: Number(row.user_id),
-        token_id: newTokenId,
-        token_hash: newHash,
-        device_id,
-        user_agent_hash,
-        ip_hash,
-        created_at: admin.firestore.FieldValue.serverTimestamp(),
-        expires_at: newExpiresAt,
-        revoked_at: null,
-        replaced_by_token_id: null,
-      });
-    });
-
-    return { ok: true, userId: row.user_id, refreshToken: newRefreshToken };
-  }
 
   const pool = getPool();
   const conn = await pool.getConnection();

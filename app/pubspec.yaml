@@ -1,6 +1,6 @@
 name: chatapp
 description: End-to-end encrypted chat app
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -16,9 +16,6 @@ dependencies:
   uuid: ^4.3.3
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
-  firebase_core: ^3.7.0
-  firebase_messaging: ^15.1.2
-  flutter_local_notifications: ^17.2.2
 
 dev_dependencies:
   flutter_test:
