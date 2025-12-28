@@ -2,7 +2,7 @@
 
 Date: 2025-12-27
 
-Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter client. This report documents security hardening work completed during this session, focusing on production readiness while preserving the E2EE threat model.
+Scope: Node.js backend (Express + ws + MySQL) and Flutter client. This report documents security hardening work completed during this session, focusing on production readiness while preserving the E2EE threat model.
 
 > IMPORTANT: This report intentionally **does not** include secrets (DB passwords, encryption keys, JWT secrets). Treat `.env` and any deployment environment variables as sensitive. Rotate any secrets that may have been exposed outside your trusted environment.
 
@@ -14,14 +14,12 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 
 - Implement a production-hardening pass end-to-end (not just review).
 - Preserve the existing E2EE model: server transports/stores ciphertext only and must not learn plaintext.
-- Harden auth/session lifecycle, WebSockets, push notifications, and at-rest secret storage.
+- Harden auth/session lifecycle, WebSockets, and at-rest secret storage.
 
 ### Outcomes (high level)
 
 - **Refresh tokens migrated toward opaque, hashed-at-rest sessions** with rotation, reuse detection, and **strict device binding in production**.
 - **WebSocket authentication hardened**: no query-string JWTs; only `Authorization: Bearer` header or `Sec-WebSocket-Protocol: bearer,<token>`.
-- **Push token storage hardened**: encrypted at rest (AES-256-GCM) + token hash for dedupe; server-side cleanup on logout.
-- **Push delivery hardened**: FCM payload is **data-only**; client displays generic local notifications and routes safely.
 - **Flutter auth hardened**: access tokens held in-memory, refresh single-flight, retry-once on 401 then logout.
 - **Crypto hardening**: HKDF-SHA256 directional separation, deterministic nonce derivation, TOFU pinning + explicit trust action.
 - **Logging hardening**: redaction helper for tokens; avoid printing secrets.
@@ -175,36 +173,13 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 
 ---
 
-## G Push Notifications Hardening
+## G Push Notifications
 
-### Storage
+Push notifications are currently **disabled** in this repository.
 
-- Push tokens are encrypted at rest using AES-256-GCM and keyed via a dedicated secret.
-- Tokens are also hashed for dedupe and lookup without decrypting.
-- On logout, backend performs best-effort deletion of all push tokens for the user.
-
-### Delivery
-
-- FCM payload changed to **data-only** (no `notification` field).
-- Payload contains only metadata (no message plaintext): sender/receiver IDs, message ID, type.
-
-### Client behavior
-
-- Handles lifecycle: foreground, background, terminated.
-- Avoids duplicate listeners.
-- Uses local notifications for generic UI when appropriate.
-- Push tap/open routing centralized and gated by auth state.
-
-- Files (key)
-
-- Backend:
-  - `backend/src/infra/crypto/pushTokenCrypto.js`
-  - `backend/src/modules/push/pushTokens.js`
-  - `backend/src/modules/push/notification.js`
-  - `backend/src/infra/db/migrations/sql/002_push_tokens.sql`
-- Flutter:
-  - `app/lib/src/core/notifications/push_notification_service.dart`
-  - `app/lib/src/core/notifications/push_router.dart`
+- Firebase/FCM integrations were removed from both backend and Flutter.
+- Real-time updates are delivered via authenticated WebSockets (`/ws`).
+- If push notifications are needed later, reintroduce them via a chosen provider with the same E2EE constraint: send only metadata (no plaintext) and keep client routing gated by auth state.
 
 ---
 
@@ -259,7 +234,6 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 - Production notes:
   - Set `NODE_ENV=production`.
   - Provide a strong `JWT_SECRET`.
-  - Provide the push-token encryption key (base64 32 bytes) and ensure it is rotated and stored securely.
   - Run DB migrations before deploying.
   - Ensure TLS is terminated at a reverse proxy and `x-forwarded-proto` is set.
 
@@ -268,7 +242,7 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 - Performance:
   - If any bulk crypto work still runs on the UI isolate (e.g., large history decrypt), consider moving to an isolate.
 - Dependency & dead-code pruning:
-  - Re-check `backend` for unused Firebase/Firestore code paths if MySQL-only deployments are intended.
+  - Keep pruning unused dependencies as features evolve.
 - Production config alignment:
   - Flutter `Config` defaults currently point to `http://...` and `ws://...`; production builds should use `--dart-define` with `https://` and `wss://`.
 
@@ -278,12 +252,10 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 
 ### Flutter (new)
 
-- `app/lib/src/core/notifications/push_router.dart`
 - `app/lib/src/core/logging/secure_log.dart`
 
 ### Flutter (updated)
 
-- `app/lib/src/core/notifications/push_notification_service.dart`
 - `app/lib/src/core/networking/authenticated_http_client.dart`
 
 ### Backend (notable areas)
@@ -291,5 +263,3 @@ Scope: Node.js backend (Express + ws + MySQL + Firebase Admin) and Flutter clien
 - `backend/src/modules/auth/refreshSessions.js` (opaque refresh + device binding)
 - `backend/src/modules/auth/auth.routes.js` (x-device-id enforcement + logout cleanup)
 - `backend/src/realtime/ws.js` (no query-token auth; header/subprotocol only)
-- `backend/src/modules/push/notification.js` (data-only push)
-- `backend/src/modules/push/pushTokens.js` (encrypted push token storage + delete-all)
