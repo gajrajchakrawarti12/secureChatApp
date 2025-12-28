@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flutter (prompt API_BASE/WS_URL)",
+      "request": "launch",
+      "type": "dart",
+      "program": "app/lib/main.dart",
+      "toolArgs": [
+        "--dart-define=API_BASE=${input:apiBase}",
+        "--dart-define=WS_URL=${input:wsUrl}"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "apiBase",
+      "type": "promptString",
+      "description": "API_BASE (must include /api/v1), e.g. https://example.com/api/v1",
+      "default": ""
+    },
+    {
+      "id": "wsUrl",
+      "type": "promptString",
+      "description": "WS_URL (backend websocket path is /ws), e.g. wss://example.com/ws",
+      "default": ""
+    }
+  ]
+}

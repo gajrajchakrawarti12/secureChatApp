@@ -1,2 +1,2 @@
 // Backward-compatible entrypoint.
-module.exports = require('./app/server');
+module.exports = require('./server');

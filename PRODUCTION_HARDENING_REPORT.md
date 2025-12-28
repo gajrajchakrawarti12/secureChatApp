@@ -177,7 +177,7 @@ Scope: Node.js backend (Express + ws + MySQL) and Flutter client. This report do
 
 Push notifications are currently **disabled** in this repository.
 
-- Firebase/FCM integrations were removed from both backend and Flutter.
+- Push notification integrations were removed from both backend and Flutter.
 - Real-time updates are delivered via authenticated WebSockets (`/ws`).
 - If push notifications are needed later, reintroduce them via a chosen provider with the same E2EE constraint: send only metadata (no plaintext) and keep client routing gated by auth state.
 

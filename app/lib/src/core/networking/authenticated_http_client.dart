@@ -95,7 +95,7 @@ class AuthenticatedHttpClient {
       return false;
     }
 
-    final deviceId = await _getOrCreateDeviceId();
+    final deviceId = await getOrCreateDeviceId();
 
     http.Response res;
     try {
@@ -118,8 +118,20 @@ class AuthenticatedHttpClient {
     }
 
     final decoded = jsonDecode(res.body);
-    final token = decoded is Map ? decoded['token']?.toString() : null;
-    final newRefresh = decoded is Map ? decoded['refreshToken']?.toString() : null;
+    if (decoded is! Map) {
+      AuthSession.clear();
+      return false;
+    }
+    final success = decoded['success'] == true;
+    final data = decoded['data'];
+    if (!success || data is! Map) {
+      AuthSession.clear();
+      await StorageService.delete('refreshToken');
+      return false;
+    }
+
+    final token = data['token']?.toString();
+    final newRefresh = data['refreshToken']?.toString();
 
     if (token == null || token.isEmpty) {
       AuthSession.clear();
@@ -134,7 +146,7 @@ class AuthenticatedHttpClient {
     return true;
   }
 
-  static Future<String?> _getOrCreateDeviceId() async {
+  static Future<String?> getOrCreateDeviceId() async {
     const key = 'deviceId';
     final existing = await StorageService.read(key);
     if (existing != null && existing.isNotEmpty) return existing;

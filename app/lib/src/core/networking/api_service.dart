@@ -13,6 +13,32 @@ class ApiService {
   static final WebSocketService _webSocket = WebSocketService();
   static final AuthenticatedHttpClient _authed = AuthenticatedHttpClient();
 
+  static Uri _uri(String path) {
+    final base = Config.apiBase;
+    if (base.isEmpty) {
+      throw StateError('Missing API_BASE. Provide --dart-define=API_BASE=https://<host>/api/v1');
+    }
+    final normalizedBase = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
+    final normalizedPath = path.startsWith('/') ? path : '/$path';
+    return Uri.parse('$normalizedBase$normalizedPath');
+  }
+
+  static ({bool success, String message, Map<String, dynamic> data}) _decodeEnvelope(http.Response res) {
+    final body = res.body;
+    if (body.isEmpty) {
+      return (success: false, message: 'empty response', data: <String, dynamic>{});
+    }
+    final decoded = jsonDecode(body);
+    if (decoded is! Map) {
+      return (success: false, message: 'invalid response', data: <String, dynamic>{});
+    }
+    final success = decoded['success'] == true;
+    final message = decoded['message']?.toString() ?? (success ? 'ok' : 'error');
+    final dataRaw = decoded['data'];
+    final data = (dataRaw is Map<String, dynamic>) ? dataRaw : <String, dynamic>{};
+    return (success: success, message: message, data: data);
+  }
+
   static Future<void> connectWebSocket({void Function(String message)? onMessage}) async {
     await _ensureWebSocketConnection(onMessage: onMessage);
   }
@@ -40,14 +66,13 @@ class ApiService {
   static Future<void> register(Map<String, dynamic> body) async {
     try {
       final res = await http.post(
-        Uri.parse("${Config.apiBase}/auth/register"),
+        _uri('/auth/register'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(body),
       );
-      final decoded = jsonDecode(res.body);
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        final msg = decoded['error'] ?? decoded['message'] ?? res.statusCode;
-        throw AuthException('$msg');
+      final env = _decodeEnvelope(res);
+      if (res.statusCode < 200 || res.statusCode >= 300 || !env.success) {
+        throw AuthException(env.message);
       }
     } catch (e) {
       if (e is AuthException) rethrow;
@@ -60,9 +85,13 @@ class ApiService {
     required String password,
   }) async {
     try {
+      final deviceId = await AuthenticatedHttpClient.getOrCreateDeviceId();
       final res = await http.post(
-        Uri.parse("${Config.apiBase}/auth/login"),
-        headers: {"Content-Type": "application/json"},
+        _uri('/auth/login'),
+        headers: {
+          "Content-Type": "application/json",
+          if (deviceId != null) 'x-device-id': deviceId,
+        },
         body: jsonEncode({"email": email, "password": password}),
       );
 
@@ -76,15 +105,15 @@ class ApiService {
       }
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
-        final msg = (decoded is Map)
-            ? (decoded['error'] ?? decoded['message'] ?? res.statusCode)
-            : res.statusCode;
+        final msg = (decoded is Map) ? (decoded['message'] ?? res.statusCode) : res.statusCode;
         throw AuthException('$msg');
       }
 
-      final map = (decoded is Map<String, dynamic>) ? decoded : <String, dynamic>{};
-      final token = map['token']?.toString();
-      final refreshToken = map['refreshToken']?.toString();
+      final env = _decodeEnvelope(res);
+      if (!env.success) throw AuthException(env.message);
+
+      final token = env.data['token']?.toString();
+      final refreshToken = env.data['refreshToken']?.toString();
       if (token == null || token.isEmpty) {
         throw AuthException('Missing access token');
       }
@@ -92,7 +121,7 @@ class ApiService {
       if (refreshToken != null && refreshToken.isNotEmpty) {
         await StorageService.write('refreshToken', refreshToken);
       }
-      return map;
+      return env.data;
     } catch (e) {
       if (e is AuthException) rethrow;
       throw NetworkException(e.toString());
@@ -107,11 +136,17 @@ class ApiService {
     }
 
     final res = await _authed.get(
-      Uri.parse("${Config.apiBase}/auth/me"),
+      _uri('/auth/me'),
     );
     if (res.statusCode >= 200 && res.statusCode < 300) {
-      final decoded = jsonDecode(res.body);
-      await StorageService.writeAll(decoded['user']);
+      final env = _decodeEnvelope(res);
+      final user = env.data['user'];
+      if (env.success && user is Map) {
+        await StorageService.writeAll(Map<String, dynamic>.from(user));
+      } else {
+        AuthSession.clear();
+        return;
+      }
       AuthSession.setAccessToken(AuthSession.accessToken);
     } else {
       AuthSession.clear();
@@ -121,13 +156,14 @@ class ApiService {
   static Future<void> logout() async {
     try {
       final res = await _authed.post(
-        Uri.parse("${Config.apiBase}/auth/logout"),
+        _uri('/auth/logout'),
         body: jsonEncode({
           "refreshToken": await StorageService.read("refreshToken"),
         }),
       );
-      if (res.statusCode < 200 || res.statusCode >= 300) {
-        throw ApiException('${res.statusCode}');
+      final env = _decodeEnvelope(res);
+      if (res.statusCode < 200 || res.statusCode >= 300 || !env.success) {
+        throw ApiException(env.message);
       }
       await _webSocket.disconnect();
       await StorageService.deleteAll();
@@ -141,16 +177,17 @@ class ApiService {
   static Future<List<Map<String, dynamic>>> getAllUsers() async {
     try {
       final res = await _authed.get(
-        Uri.parse("${Config.apiBase}/user/all"),
+        _uri('/user/all'),
       );
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
         throw ApiException('Failed to fetch users: ${res.statusCode}');
       }
 
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map && decoded['users'] is List) {
-        return List<Map<String, dynamic>>.from(decoded['users']);
+      final env = _decodeEnvelope(res);
+      final users = env.data['users'];
+      if (env.success && users is List) {
+        return List<Map<String, dynamic>>.from(users);
       } else {
         throw ApiException('Invalid response format');
       }
@@ -163,19 +200,15 @@ class ApiService {
   static Future<Map<String, dynamic>> getUserById(String userId) async {
     try {
       final res = await _authed.get(
-        Uri.parse("${Config.apiBase}/user/$userId"),
+        _uri('/user/$userId'),
       );
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
         throw ApiException('Failed to fetch user: ${res.statusCode}');
       }
 
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map<String, dynamic>) {
-        return decoded;
-      } else {
-        throw ApiException('Invalid response format');
-      }
+      final env = _decodeEnvelope(res);
+      return env.data;
     } catch (e) {
       if (e is ApiException) rethrow;
       throw NetworkException(e.toString());
@@ -185,16 +218,17 @@ class ApiService {
   static Future<String?> getUserPublicKey(String userId) async {
     try {
       final res = await _authed.get(
-        Uri.parse("${Config.apiBase}/user/$userId/public-key"),
+        _uri('/user/$userId/public-key'),
       );
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
         throw ApiException('Failed to fetch public key: ${res.statusCode}');
       }
 
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map && decoded['publicKey'] is String) {
-        return decoded['publicKey'] as String;
+      final env = _decodeEnvelope(res);
+      final pk = env.data['publicKey'];
+      if (env.success && pk is String) {
+        return pk;
       }
       return null;
     } catch (e) {
@@ -206,14 +240,15 @@ class ApiService {
   static Future<List<Map<String, dynamic>>> getAllContacts() async {
     try {
       final res = await _authed.get(
-        Uri.parse("${Config.apiBase}/user/contacts"),
+        _uri('/user/contacts'),
       );
       if (res.statusCode < 200 || res.statusCode >= 300) {
         throw ApiException('Failed to fetch contacts: ${res.statusCode}');
       }
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map && decoded['contacts'] is List) {
-        return List<Map<String, dynamic>>.from(decoded['contacts']);
+      final env = _decodeEnvelope(res);
+      final contacts = env.data['contacts'];
+      if (env.success && contacts is List) {
+        return List<Map<String, dynamic>>.from(contacts);
       } else {
         throw ApiException('Invalid response format');
       }
@@ -254,16 +289,17 @@ class ApiService {
   static Future<List<Map<String, dynamic>>> fetchMessagesForReceiver(int receiverId) async {
     try {
       final res = await _authed.get(
-        Uri.parse("${Config.apiBase}/messages/$receiverId"),
+        _uri('/messages/$receiverId'),
       );
 
       if (res.statusCode < 200 || res.statusCode >= 300) {
         throw ApiException('Failed to fetch messages: ${res.statusCode}');
       }
 
-      final decoded = jsonDecode(res.body);
-      if (decoded is Map && decoded['messages'] is List) {
-        return List<Map<String, dynamic>>.from(decoded['messages']);
+      final env = _decodeEnvelope(res);
+      final messages = env.data['messages'];
+      if (env.success && messages is List) {
+        return List<Map<String, dynamic>>.from(messages);
       } else {
         throw ApiException('Invalid response format');
       }

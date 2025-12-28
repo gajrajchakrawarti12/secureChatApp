@@ -1,9 +1,14 @@
 const WebSocket = require('ws');
 const jwt = require('jsonwebtoken');
-const { getPool } = require('../infra/db');
 const { logError, logWs } = require('../infra/logging/logger');
 
-const { JWT_SECRET = 'changeme' } = process.env;
+const messagesRepository = require('../repositories/messagesRepository');
+
+function getJwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || String(secret).trim().length < 32) return null;
+  return secret;
+}
 
 function extractJwtFromWsRequest(req) {
   // 1) Authorization header: Bearer <token>
@@ -56,7 +61,9 @@ function initWebsocket(server) {
     let payload;
     try {
       if (!token) throw new Error('missing token');
-      payload = jwt.verify(token, JWT_SECRET);
+      const secret = getJwtSecret();
+      if (!secret) throw new Error('server misconfigured');
+      payload = jwt.verify(token, secret);
       if (!payload || !payload.userId) throw new Error('invalid token payload');
     } catch (e) {
       try { logWs(`WS reject: id=${ws.id} remote=${remote} reason=${e && e.message ? e.message : String(e)}`); } catch (_) {}
@@ -93,25 +100,21 @@ function initWebsocket(server) {
         logWs(`WS message recv: id=${ws.id} sender=${sender_id} receiver=${receiver_id} size=${encrypted_message.length}`);
 
         try {
-          const pool = getPool();
-          const [res] = await pool.execute(
-            'INSERT INTO messages (sender_id, receiver_id, encrypted_message) VALUES (?, ?, ?)',
-            [sender_id, receiver_id, encrypted_message]
-          );
-          logWs(`WS message saved: id=${ws.id} rowId=${res.insertId}`);
+          const insertId = await messagesRepository.insertMessage({
+            senderId: sender_id,
+            receiverId: receiver_id,
+            encryptedMessage: encrypted_message,
+          });
+          logWs(`WS message saved: id=${ws.id} rowId=${insertId}`);
 
-          // retrieve the saved row to get the DB timestamp
-          const [[row]] = await pool.execute(
-            'SELECT id, sender_id, receiver_id, encrypted_message, timestamp FROM messages WHERE id = ? LIMIT 1',
-            [res.insertId]
-          );
+          const row = insertId ? await messagesRepository.findMessageById(insertId) : null;
 
           const saved = row || {
-            id: res.insertId,
+            id: insertId,
             sender_id,
             receiver_id,
             encrypted_message,
-            timestamp: new Date()
+            timestamp: new Date(),
           };
 
           const out = JSON.stringify({ type: 'message', payload: saved, from: ws.id, ts: Date.now() });
