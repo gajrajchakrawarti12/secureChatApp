@@ -9,6 +9,9 @@ class WebSocketService {
   WebSocketChannel? _channel;
   StreamSubscription? _subscription;
   void Function(String message)? _handler;
+  final StreamController<String> _messagesController = StreamController<String>.broadcast();
+
+  Stream<String> get messages => _messagesController.stream;
 
   bool get isConnected => _channel != null;
 
@@ -66,8 +69,12 @@ class WebSocketService {
   }
 
   void _onData(dynamic event) {
+    if (event is! String) return;
+
+    _messagesController.add(event);
+
     final handler = _handler;
-    if (handler != null && event is String) {
+    if (handler != null) {
       handler(event);
     }
   }

@@ -122,6 +122,7 @@ class AuthenticatedHttpClient {
       AuthSession.clear();
       return false;
     }
+    
     final success = decoded['success'] == true;
     final data = decoded['data'];
     if (!success || data is! Map) {

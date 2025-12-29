@@ -13,6 +13,8 @@ class ApiService {
   static final WebSocketService _webSocket = WebSocketService();
   static final AuthenticatedHttpClient _authed = AuthenticatedHttpClient();
 
+  static Stream<String> get webSocketMessages => _webSocket.messages;
+
   static Uri _uri(String path) {
     final base = Config.apiBase;
     if (base.isEmpty) {
@@ -41,6 +43,10 @@ class ApiService {
 
   static Future<void> connectWebSocket({void Function(String message)? onMessage}) async {
     await _ensureWebSocketConnection(onMessage: onMessage);
+  }
+
+  static void clearWebSocketHandler() {
+    _webSocket.updateHandler(null);
   }
 
   static Future<void> disconnectWebSocket() async {

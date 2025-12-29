@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:chatapp/src/core/crypto/crypto_helper.dart';
 import 'package:chatapp/src/core/crypto/conversation_keys.dart';
@@ -55,6 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? _myId;
   int? _myIdInt;
   ConversationKeys? _keys;
+  StreamSubscription<String>? _wsSub;
 
   @override
   void initState() {
@@ -135,7 +137,9 @@ class _ChatScreenState extends State<ChatScreen> {
       await _loadMessages();
 
       // Connect WebSocket and listen for new messages
-      await ApiService.connectWebSocket(onMessage: _onWsMessage);
+      await ApiService.connectWebSocket();
+      _wsSub?.cancel();
+      _wsSub = ApiService.webSocketMessages.listen(_onWsMessage);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -190,9 +194,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _controller.dispose();
     _scrollController.dispose();
+    _wsSub?.cancel();
     super.dispose();
-    // Detach WS listener/connection to avoid leaks when leaving chat
-    ApiService.disconnectWebSocket();
   }
 
   void _scrollToBottom() {

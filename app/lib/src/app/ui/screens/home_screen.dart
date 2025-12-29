@@ -1,7 +1,10 @@
 import 'package:chatapp/src/features/contacts/ui/screens/contacts_screen.dart';
 import 'package:chatapp/src/features/public/ui/screens/public_screen.dart';
 import 'package:chatapp/src/features/settings/ui/screens/setting_screen.dart';
+import 'package:chatapp/src/core/networking/api_service.dart';
+import 'package:chatapp/src/core/notifications/push_notification_service.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +16,34 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   // compute theme inside build() so it updates when Theme changes
+
+  StreamSubscription<String>? _wsSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _connectWebSocket();
+  }
+
+  Future<void> _connectWebSocket() async {
+    try {
+      await ApiService.connectWebSocket();
+      _wsSub?.cancel();
+      _wsSub = ApiService.webSocketMessages.listen(
+        (event) => unawaited(PushNotificationService.handleWebSocketEvent(event)),
+      );
+    } catch (e) {
+      // HomeScreen can be created briefly during auth transitions; skip quietly.
+      debugPrint('WebSocket connect skipped: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _wsSub?.cancel();
+    unawaited(ApiService.disconnectWebSocket());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

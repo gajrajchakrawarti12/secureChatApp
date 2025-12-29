@@ -1,0 +1,86 @@
+[
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\core_implementations.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\core_implementations.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\core_implementations.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\core_implementations.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\standard_codec.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\standard_codec.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\standard_codec.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\standard_codec.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\plugin_registrar.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\plugin_registrar.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\plugin_registrar.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_plugin.dir\\ephemeral\\cpp_client_wrapper\\plugin_registrar.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\core_implementations.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\core_implementations.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\core_implementations.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\core_implementations.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\standard_codec.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\standard_codec.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\standard_codec.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\standard_codec.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\flutter_engine.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\flutter_engine.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\flutter_engine.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\flutter_engine.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foflutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\flutter_view_controller.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\flutter_view_controller.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\flutter_view_controller.cc",
+  "output": "flutter\\CMakeFiles\\flutter_wrapper_app.dir\\ephemeral\\cpp_client_wrapper\\flutter_view_controller.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Forunner\\CMakeFiles\\app.dir\\flutter_window.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\runner\\flutter_window.cpp",
+  "file": "D:\\chatapp\\app\\windows\\runner\\flutter_window.cpp",
+  "output": "runner\\CMakeFiles\\app.dir\\flutter_window.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Forunner\\CMakeFiles\\app.dir\\main.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\runner\\main.cpp",
+  "file": "D:\\chatapp\\app\\windows\\runner\\main.cpp",
+  "output": "runner\\CMakeFiles\\app.dir\\main.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Forunner\\CMakeFiles\\app.dir\\utils.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\runner\\utils.cpp",
+  "file": "D:\\chatapp\\app\\windows\\runner\\utils.cpp",
+  "output": "runner\\CMakeFiles\\app.dir\\utils.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Forunner\\CMakeFiles\\app.dir\\win32_window.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\runner\\win32_window.cpp",
+  "file": "D:\\chatapp\\app\\windows\\runner\\win32_window.cpp",
+  "output": "runner\\CMakeFiles\\app.dir\\win32_window.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -ID:\\chatapp\\app\\windows -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Forunner\\CMakeFiles\\app.dir\\__\\flutter\\generated_plugin_registrant.cc.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\generated_plugin_registrant.cc",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\generated_plugin_registrant.cc",
+  "output": "runner\\CMakeFiles\\app.dir\\__\\flutter\\generated_plugin_registrant.cc.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe -DFLUTTER_VERSION=\\\"0.1.0\\\" -DFLUTTER_VERSION_BUILD=0 -DFLUTTER_VERSION_MAJOR=0 -DFLUTTER_VERSION_MINOR=1 -DFLUTTER_VERSION_PATCH=0 -DNOMINMAX -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -I D:\\chatapp\\app\\windows -I D:\\chatapp\\app\\windows\\flutter\\ephemeral -I D:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include -I D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\include -DWIN32 -D_DEBUG /fo runner\\CMakeFiles\\app.dir\\Runner.rc.res D:\\chatapp\\app\\windows\\runner\\Runner.rc",
+  "file": "D:\\chatapp\\app\\windows\\runner\\Runner.rc",
+  "output": "runner\\CMakeFiles\\app.dir\\Runner.rc.res"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_PLUGIN_IMPL -DSECURE_STORAGE_KEY_PREFIX=\\\"app_VGhpcyBpcyB0aGUgcHJlZml4IGZv_\\\" -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -Dflutter_secure_storage_windows_plugin_EXPORTS -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foplugins\\flutter_secure_storage_windows\\CMakeFiles\\flutter_secure_storage_windows_plugin.dir\\flutter_secure_storage_windows_plugin.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\flutter_secure_storage_windows_plugin.cpp",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\flutter_secure_storage_windows_plugin.cpp",
+  "output": "plugins\\flutter_secure_storage_windows\\CMakeFiles\\flutter_secure_storage_windows_plugin.dir\\flutter_secure_storage_windows_plugin.cpp.obj"
+}
+]

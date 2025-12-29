@@ -10,9 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
-  web_socket_channel: ^2.3.0
+  web_socket_channel: ^3.0.3
   cryptography: ^2.1.0
-  flutter_secure_storage: ^9.0.0
+  flutter_secure_storage: ^10.0.0
+  flutter_local_notifications: ^19.0.0
   uuid: ^4.3.3
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
