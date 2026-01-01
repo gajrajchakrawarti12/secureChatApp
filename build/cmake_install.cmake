@@ -47,6 +47,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("D:/chatapp/build/plugins/flutter_secure_storage_windows/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("D:/chatapp/build/plugins/flutter_local_notifications_windows/cmake_install.cmake")
+endif()
+
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
    "D:/chatapp/build/runner/app.exe")
@@ -85,14 +90,17 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "D:/chatapp/build/runner/flutter_secure_storage_windows_plugin.dll")
+   "D:/chatapp/build/runner/flutter_secure_storage_windows_plugin.dll;D:/chatapp/build/runner/flutter_local_notifications_windows.dll")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "D:/chatapp/build/runner" TYPE FILE FILES "D:/chatapp/build/plugins/flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.dll")
+  file(INSTALL DESTINATION "D:/chatapp/build/runner" TYPE FILE FILES
+    "D:/chatapp/build/plugins/flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.dll"
+    "D:/chatapp/build/plugins/flutter_local_notifications_windows/shared/flutter_local_notifications_windows.dll"
+    )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)

@@ -82,5 +82,23 @@
   "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DFLUTTER_PLUGIN_IMPL -DSECURE_STORAGE_KEY_PREFIX=\\\"app_VGhpcyBpcyB0aGUgcHJlZml4IGZv_\\\" -DUNICODE -D_DEBUG -D_HAS_EXCEPTIONS=0 -D_UNICODE -Dflutter_secure_storage_windows_plugin_EXPORTS -ID:\\chatapp\\app\\windows\\flutter\\ephemeral -ID:\\chatapp\\app\\windows\\flutter\\ephemeral\\cpp_client_wrapper\\include /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /W4 /WX /wd\\\"4100\\\" /EHsc /Foplugins\\flutter_secure_storage_windows\\CMakeFiles\\flutter_secure_storage_windows_plugin.dir\\flutter_secure_storage_windows_plugin.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\flutter_secure_storage_windows_plugin.cpp",
   "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_secure_storage_windows\\windows\\flutter_secure_storage_windows_plugin.cpp",
   "output": "plugins\\flutter_secure_storage_windows\\CMakeFiles\\flutter_secure_storage_windows_plugin.dir\\flutter_secure_storage_windows_plugin.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DDART_SHARED_LIB -DUNICODE -D_UNICODE -Dflutter_local_notifications_windows_EXPORTS /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Foplugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\ffi_api.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\ffi_api.cpp",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\ffi_api.cpp",
+  "output": "plugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\ffi_api.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DDART_SHARED_LIB -DUNICODE -D_UNICODE -Dflutter_local_notifications_windows_EXPORTS /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Foplugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\plugin.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\plugin.cpp",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\plugin.cpp",
+  "output": "plugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\plugin.cpp.obj"
+},
+{
+  "directory": "D:/chatapp/build",
+  "command": "C:\\PROGRA~1\\MICROS~1\\18\\Insiders\\VC\\Tools\\MSVC\\1450~1.357\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -DDART_SHARED_LIB -DUNICODE -D_UNICODE -Dflutter_local_notifications_windows_EXPORTS /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++17 /Foplugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\utils.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\utils.cpp",
+  "file": "D:\\chatapp\\app\\windows\\flutter\\ephemeral\\.plugin_symlinks\\flutter_local_notifications_windows\\src\\utils.cpp",
+  "output": "plugins\\flutter_local_notifications_windows\\shared\\CMakeFiles\\flutter_local_notifications_windows.dir\\utils.cpp.obj"
 }
 ]

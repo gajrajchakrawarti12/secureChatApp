@@ -110,6 +110,12 @@
 		},
 		{
 			"path" : "flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_windows/windows/CMakeLists.txt"
+		},
+		{
+			"path" : "flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/windows/CMakeLists.txt"
+		},
+		{
+			"path" : "flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/src/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",

@@ -10,10 +10,11 @@
 					[
 						1,
 						2,
-						3
+						3,
+						4
 					],
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-40e0cb29e68c705a6814.json",
+					"jsonFile" : "directory-.-Debug-bb65ced88c3874d2688d.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.14"
@@ -34,8 +35,8 @@
 					"targetIndexes" : 
 					[
 						1,
-						3,
-						4
+						4,
+						5
 					]
 				},
 				{
@@ -65,6 +66,36 @@
 					"source" : "flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_windows/windows",
 					"targetIndexes" : 
 					[
+						3
+					]
+				},
+				{
+					"build" : "plugins/flutter_local_notifications_windows",
+					"childIndexes" : 
+					[
+						5
+					],
+					"jsonFile" : "directory-plugins.flutter_local_notifications_windows-Debug-4c631907b71a422cb4e9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/windows"
+				},
+				{
+					"build" : "plugins/flutter_local_notifications_windows/shared",
+					"jsonFile" : "directory-plugins.flutter_local_notifications_windows.shared-Debug-d24d47c82577e34075da.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 4,
+					"source" : "flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/src",
+					"targetIndexes" : 
+					[
 						2
 					]
 				}
@@ -76,7 +107,8 @@
 					"childIndexes" : 
 					[
 						1,
-						2
+						2,
+						3
 					],
 					"directoryIndexes" : 
 					[
@@ -87,8 +119,8 @@
 					"targetIndexes" : 
 					[
 						1,
-						3,
-						4
+						4,
+						5
 					]
 				},
 				{
@@ -112,6 +144,30 @@
 					"parentIndex" : 0,
 					"targetIndexes" : 
 					[
+						3
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						4
+					],
+					"directoryIndexes" : 
+					[
+						4
+					],
+					"name" : "flutter_local_notifications_windows",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "flutter_local_notifications_windows_library",
+					"parentIndex" : 3,
+					"targetIndexes" : 
+					[
 						2
 					]
 				}
@@ -121,7 +177,7 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "app::@056c4f61b0156d1d9b06",
-					"jsonFile" : "target-app-Debug-3129c5aa27690ed5a2ed.json",
+					"jsonFile" : "target-app-Debug-5eb62efba9b6d0bf5006.json",
 					"name" : "app",
 					"projectIndex" : 1
 				},
@@ -131,6 +187,13 @@
 					"jsonFile" : "target-flutter_assemble-Debug-d4b211ec8350cb686860.json",
 					"name" : "flutter_assemble",
 					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "flutter_local_notifications_windows::@aa4af2ea1070bcc9576c",
+					"jsonFile" : "target-flutter_local_notifications_windows-Debug-2e4bcd14cc6a343171ed.json",
+					"name" : "flutter_local_notifications_windows",
+					"projectIndex" : 4
 				},
 				{
 					"directoryIndex" : 3,

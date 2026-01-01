@@ -98,7 +98,8 @@
 			"destination" : "D:/chatapp/build/runner",
 			"paths" : 
 			[
-				"D:/chatapp/build/plugins/flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.dll"
+				"D:/chatapp/build/plugins/flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.dll",
+				"D:/chatapp/build/plugins/flutter_local_notifications_windows/shared/flutter_local_notifications_windows.dll"
 			],
 			"type" : "file"
 		},

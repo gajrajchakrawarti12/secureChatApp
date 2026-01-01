@@ -21,6 +21,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isSubmitting = false;
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.text = '';
+    _passwordController.text = '';
+    if (ApiService.isLoggedIn.value == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const HomeScreen()));
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();

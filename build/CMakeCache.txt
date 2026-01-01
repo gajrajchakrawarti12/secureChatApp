@@ -103,6 +103,21 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=app
 
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=1.0.0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
+
 //RC compiler
 CMAKE_RC_COMPILER:FILEPATH=C:/Program Files (x86)/Windows Kits/10/bin/10.0.26100.0/x64/rc.exe
 
@@ -185,6 +200,27 @@ app_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 app_SOURCE_DIR:STATIC=D:/chatapp/app/windows
+
+//Value Computed by CMake
+flutter_local_notifications_windows_BINARY_DIR:STATIC=D:/chatapp/build/plugins/flutter_local_notifications_windows
+
+//Value Computed by CMake
+flutter_local_notifications_windows_IS_TOP_LEVEL:STATIC=OFF
+
+//Dependencies for the target
+flutter_local_notifications_windows_LIB_DEPENDS:STATIC=general;runtimeobject;
+
+//Value Computed by CMake
+flutter_local_notifications_windows_SOURCE_DIR:STATIC=D:/chatapp/app/windows/flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/windows
+
+//Value Computed by CMake
+flutter_local_notifications_windows_library_BINARY_DIR:STATIC=D:/chatapp/build/plugins/flutter_local_notifications_windows/shared
+
+//Value Computed by CMake
+flutter_local_notifications_windows_library_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+flutter_local_notifications_windows_library_SOURCE_DIR:STATIC=D:/chatapp/app/windows/flutter/ephemeral/.plugin_symlinks/flutter_local_notifications_windows/src
 
 //Value Computed by CMake
 flutter_secure_storage_windows_BINARY_DIR:STATIC=D:/chatapp/build/plugins/flutter_secure_storage_windows
@@ -283,7 +319,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

@@ -18,6 +18,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   StreamSubscription<String>? _wsSub;
   int? _myIdInt;
   final Map<int, int> _unreadBySenderId = <int, int>{};
+  int? _activeChatPeerId;
 
   @override
   void initState() {
@@ -53,6 +54,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
       final receiverId = int.tryParse(payload['receiver_id']?.toString() ?? '');
       if (senderId == null || receiverId == null) return;
       if (receiverId != myId) return;
+
+      // If I'm actively viewing this sender's chat, don't show an unread badge.
+      if (_activeChatPeerId != null && senderId == _activeChatPeerId) return;
 
       if (!mounted) return;
       setState(() {
@@ -150,6 +154,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                               const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final user = users[index];
+                            final publicKey = (user['public_key'] ?? '').toString();
+                            final hasPublicKey = publicKey.isNotEmpty;
                             final rid = (user['id'] is int)
                                 ? user['id'] as int
                                 : int.tryParse('${user['id']}');
@@ -164,16 +170,15 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                   backgroundColor: theme.colorScheme.primary
                                       .withValues(alpha: 0.1),
                                   child: Icon(
-                                    user['public_key'].isNotEmpty
+                                    hasPublicKey
                                         ? Icons.person
                                         : Icons.person_off,
                                     color: theme.colorScheme.primary,
                                   ),
                                 ),
                                 onTap: () {
-                                  final key = (user['public_key'] ?? '')
-                                      .toString();
-                                  if (key.isEmpty || rid == null) {
+                                  final key = publicKey;
+                                  if (!hasPublicKey || rid == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text('User has no public key'),
@@ -182,30 +187,40 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                     return;
                                   }
 
-                                  if (unread > 0) {
+                                    // Mark this peer as active so we don't count incoming messages
+                                    // from them as "unread" while their chat is open.
                                     setState(() {
+                                      _activeChatPeerId = rid;
                                       _unreadBySenderId.remove(rid);
                                     });
-                                  }
 
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => ChatScreen(
-                                        receiverId: rid,
-                                        receiverPublicKeyBase64: key,
-                                        title: user['name'] ?? key,
-                                      ),
-                                    ),
-                                  );
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (_) => ChatScreen(
+                                              receiverId: rid,
+                                              receiverPublicKeyBase64: key,
+                                              title: user['name'] ?? key,
+                                            ),
+                                          ),
+                                        )
+                                        .then((_) {
+                                          if (!mounted) return;
+                                          setState(() {
+                                            _activeChatPeerId = null;
+                                            // Defensive: ensure no stale unread remains for this peer.
+                                            _unreadBySenderId.remove(rid);
+                                          });
+                                        });
                                 },
                                 title: Text(
-                                  user['public_key'],
+                                  publicKey,
                                   style: theme.textTheme.titleMedium,
                                 ),
                                 subtitle: Text(
                                   unread > 0
                                       ? (unread == 1 ? 'New message' : 'New messages ($unread)')
-                                      : (user['public_key'].isNotEmpty
+                                      : (hasPublicKey
                                           ? 'Member'
                                           : 'No Public Key'),
                                   maxLines: 1,
